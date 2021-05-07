@@ -17,6 +17,8 @@ export class ExamplePlatformAccessory {
   private exampleStates = {
     On: false,
     Brightness: 100,
+    Hue: 0,
+    Saturation: 0,
   };
 
   constructor(
@@ -26,9 +28,9 @@ export class ExamplePlatformAccessory {
 
     // set accessory information
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Default-Manufacturer')
-      .setCharacteristic(this.platform.Characteristic.Model, 'Default-Model')
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, 'Default-Serial');
+      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Beckett Loose')
+      .setCharacteristic(this.platform.Characteristic.Model, 'LightyMcLightFace')
+      .setCharacteristic(this.platform.Characteristic.SerialNumber, '133742069');
 
     // get the LightBulb service if it exists, otherwise create a new LightBulb service
     // you can create multiple services for each accessory
@@ -50,6 +52,13 @@ export class ExamplePlatformAccessory {
     this.service.getCharacteristic(this.platform.Characteristic.Brightness)
       .onSet(this.setBrightness.bind(this));       // SET - bind to the 'setBrightness` method below
 
+    // register handlers for the Hue Characteristic
+    this.service.getCharacteristic(this.platform.Characteristic.Hue);
+
+    // register handlers for the Saturation Characteristic
+    this.service.getCharacteristic(this.platform.Characteristic.Saturation);
+
+    /*
     /**
      * Creating multiple services of the same type.
      *
@@ -62,7 +71,7 @@ export class ExamplePlatformAccessory {
      */
 
     // Example: add two "motion sensor" services to the accessory
-    const motionSensorOneService = this.accessory.getService('Motion Sensor One Name') ||
+    /*const motionSensorOneService = this.accessory.getService('Motion Sensor One Name') ||
       this.accessory.addService(this.platform.Service.MotionSensor, 'Motion Sensor One Name', 'YourUniqueIdentifier-1');
 
     const motionSensorTwoService = this.accessory.getService('Motion Sensor Two Name') ||
@@ -76,7 +85,7 @@ export class ExamplePlatformAccessory {
      * Here we change update the motion sensor trigger states on and off every 10 seconds
      * the `updateCharacteristic` method.
      *
-     */
+     *//*
     let motionDetected = false;
     setInterval(() => {
       // EXAMPLE - inverse the trigger
@@ -88,7 +97,7 @@ export class ExamplePlatformAccessory {
 
       this.platform.log.debug('Triggering motionSensorOneService:', motionDetected);
       this.platform.log.debug('Triggering motionSensorTwoService:', !motionDetected);
-    }, 10000);
+    }, 10000);*/
   }
 
   /**
@@ -138,4 +147,35 @@ export class ExamplePlatformAccessory {
     this.platform.log.debug('Set Characteristic Brightness -> ', value);
   }
 
+  // Handle GET Hue value from homekit
+  async getHue(): Promise<CharacteristicValue> {
+    const hue = this.exampleStates.Hue;
+
+    this.platform.log.debug('Get Characteristic Hue ->', hue);
+
+    return hue;
+  }
+
+  // Handle SET Hue value from homekit
+  async setHue(value: CharacteristicValue) {
+    this.exampleStates.Hue = value as number;
+
+    this.platform.log.debug('Set Characteristic Hue ->', value);
+  }
+
+  // Handle GET Saturation value from homekit
+  async getSaturation(): Promise<CharacteristicValue> {
+    const hue = this.exampleStates.Hue;
+
+    this.platform.log.debug('Get Characteristic Saturation ->', hue);
+
+    return hue;
+  }
+
+  // Handle SET Saturation value from homekit
+  async setSaturation(value: CharacteristicValue) {
+    this.exampleStates.Brightness = value as number;
+
+    this.platform.log.debug('Set Characteristic Saturation ->', value);
+  }
 }

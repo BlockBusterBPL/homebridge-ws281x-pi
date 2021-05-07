@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
+  "pluginAlias": "ws281x-raspi",
   "pluginType": "platform",
   "singular": true,
   "schema": {
