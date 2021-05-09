@@ -2,11 +2,28 @@ import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 
 import { ExampleHomebridgePlatform } from './platform';
 
+import axios = require('axios');
+import { resolve } from 'node:path';
+
+
+
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
  * Each accessory may expose multiple services of different service types.
  */
+
+class LEDState {
+  hue: number;
+  sat: number;
+  val: number;
+
+  constructor(hue = 0, sat = 0, val = 0) {
+    this.hue = hue;
+    this.sat = sat;
+    this.val = val;
+  }
+}
 export class ExamplePlatformAccessory {
   private service: Service;
 
@@ -16,7 +33,7 @@ export class ExamplePlatformAccessory {
    */
   private exampleStates = {
     On: false,
-    Brightness: 100,
+    Brightness: 0,
     Hue: 0,
     Saturation: 0,
   };
@@ -25,7 +42,7 @@ export class ExamplePlatformAccessory {
     private readonly platform: ExampleHomebridgePlatform,
     private readonly accessory: PlatformAccessory,
   ) {
-
+    axios.default.defaults.baseURL = 'localhost';
     // set accessory information
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
       .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Beckett Loose')
@@ -142,14 +159,31 @@ export class ExamplePlatformAccessory {
    */
   async setBrightness(value: CharacteristicValue) {
     // implement your own code to set the brightness
-    this.exampleStates.Brightness = value as number;
+    //this.exampleStates.Brightness = value as number;
+    axios.default.post('/SetVal', {value});
 
     this.platform.log.debug('Set Characteristic Brightness -> ', value);
   }
 
+  async getBrightness(): Promise<CharacteristicValue> {
+    let value;
+    axios.default.get('/GetHue')
+      .then((response) => {
+        value = response.data;
+      });
+
+    this.platform.log.debug('Set Characteristic Brightness -> ', value);
+    return value;
+  }
+
   // Handle GET Hue value from homekit
   async getHue(): Promise<CharacteristicValue> {
-    const hue = this.exampleStates.Hue;
+    //const hue = this.exampleStates.Hue;
+    let hue;
+    axios.default.get('/GetHue')
+      .then((response) => {
+        hue = response.data;
+      });
 
     this.platform.log.debug('Get Characteristic Hue ->', hue);
 
@@ -158,24 +192,30 @@ export class ExamplePlatformAccessory {
 
   // Handle SET Hue value from homekit
   async setHue(value: CharacteristicValue) {
-    this.exampleStates.Hue = value as number;
+    //this.exampleStates.Hue = value as number;
+    axios.default.post('/SetHue', {value});
 
     this.platform.log.debug('Set Characteristic Hue ->', value);
   }
 
   // Handle GET Saturation value from homekit
   async getSaturation(): Promise<CharacteristicValue> {
-    const hue = this.exampleStates.Hue;
+    //const hue = this.exampleStates.Hue;
+    let sat;
+    axios.default.get('/GetSat')
+      .then((response) => {
+        sat = response.data;
+      });
 
-    this.platform.log.debug('Get Characteristic Saturation ->', hue);
+    this.platform.log.debug('Get Characteristic Saturation ->', sat);
 
-    return hue;
+    return sat;
   }
 
   // Handle SET Saturation value from homekit
   async setSaturation(value: CharacteristicValue) {
-    this.exampleStates.Brightness = value as number;
-
+    //this.exampleStates.Brightness = value as number;
+    axios.default.post('/SetSat', {value});
     this.platform.log.debug('Set Characteristic Saturation ->', value);
   }
 }
