@@ -3,7 +3,6 @@ import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 import { ExampleHomebridgePlatform } from './platform';
 
 import axios = require('axios');
-import { resolve } from 'node:path';
 
 
 
@@ -62,18 +61,23 @@ export class ExamplePlatformAccessory {
 
     // register handlers for the On/Off Characteristic
     this.service.getCharacteristic(this.platform.Characteristic.On)
-      .onSet(this.setOn.bind(this))                // SET - bind to the `setOn` method below
-      .onGet(this.getOn.bind(this));               // GET - bind to the `getOn` method below
+      .onSet(this.setOn.bind(this))                // SET - bind to the 'setOn' method below
+      .onGet(this.getOn.bind(this));               // GET - bind to the 'getOn' method below
 
     // register handlers for the Brightness Characteristic
     this.service.getCharacteristic(this.platform.Characteristic.Brightness)
-      .onSet(this.setBrightness.bind(this));       // SET - bind to the 'setBrightness` method below
+      .onSet(this.setBrightness.bind(this))       // SET - bind to the 'setBrightness' method below
+      .onGet(this.getBrightness.bind(this));      // GET - bind to the 'getBrightness' method below
 
     // register handlers for the Hue Characteristic
-    this.service.getCharacteristic(this.platform.Characteristic.Hue);
+    this.service.getCharacteristic(this.platform.Characteristic.Hue)
+      .onSet(this.setHue.bind(this))              // SET - bind to the 'setHue' method below
+      .onGet(this.getHue.bind(this));             // GET - bind to the 'getHue' method below
 
     // register handlers for the Saturation Characteristic
-    this.service.getCharacteristic(this.platform.Characteristic.Saturation);
+    this.service.getCharacteristic(this.platform.Characteristic.Saturation)
+      .onSet(this.setSaturation.bind(this))       // SET - bind to the 'setSaturation' method below
+      .onGet(this.getSaturation.bind(this));      // GET - bind tp the 'getSaturation' method below
 
     /*
     /**
