@@ -11,7 +11,7 @@ import axios = require('axios');
  * An instance of this class is created for each accessory your platform registers
  * Each accessory may expose multiple services of different service types.
  */
-
+/*
 class LEDState {
   hue: number;
   sat: number;
@@ -23,6 +23,7 @@ class LEDState {
     this.val = val;
   }
 }
+*/
 export class ExamplePlatformAccessory {
   private service: Service;
 
@@ -127,7 +128,9 @@ export class ExamplePlatformAccessory {
    */
   async setOn(value: CharacteristicValue) {
     // implement your own code to turn your device on/off
-    this.exampleStates.On = value as boolean;
+    //this.exampleStates.On = value as boolean;
+
+    axios.default.post('/SetOn', value as string);
 
     this.platform.log.debug('Set Characteristic On ->', value);
   }
@@ -147,7 +150,16 @@ export class ExamplePlatformAccessory {
    */
   async getOn(): Promise<CharacteristicValue> {
     // implement your own code to check if the device is on
-    const isOn = this.exampleStates.On;
+    //var isOn = this.exampleStates.On;
+    let isOn: boolean;
+    let isOnString: string;
+    isOn = false;
+    axios.default.get('/GetOn').then(
+      (response) => {
+        isOnString = response.data;
+        isOn = (isOnString === 'true');
+      },
+    );
 
     this.platform.log.debug('Get Characteristic On ->', isOn);
 
