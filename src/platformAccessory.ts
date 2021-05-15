@@ -130,7 +130,7 @@ export class ExamplePlatformAccessory {
     // implement your own code to turn your device on/off
     //this.exampleStates.On = value as boolean;
 
-    axios.default.post('/SetOn', value as string);
+    axios.default.post('SetOn', value as string);
 
     this.platform.log.debug('Set Characteristic On ->', value);
   }
@@ -154,13 +154,12 @@ export class ExamplePlatformAccessory {
     let isOn: boolean;
     let isOnString: string;
     isOn = false;
-    axios.default.get('/GetOn').then(
+    axios.default.get('GetOn').then(
       (response) => {
         isOnString = response.data;
         isOn = (isOnString === 'true');
       },
     );
-
     this.platform.log.debug('Get Characteristic On ->', isOn);
 
     // if you need to return an error to show the device as "Not Responding" in the Home app:
@@ -176,19 +175,19 @@ export class ExamplePlatformAccessory {
   async setBrightness(value: CharacteristicValue) {
     // implement your own code to set the brightness
     //this.exampleStates.Brightness = value as number;
-    axios.default.post('/SetVal', {value});
+    axios.default.post('SetVal', {value});
 
     this.platform.log.debug('Set Characteristic Brightness -> ', value);
   }
 
   async getBrightness(): Promise<CharacteristicValue> {
     let value;
-    axios.default.get('/GetHue')
+    axios.default.get('GetVal')
       .then((response) => {
         value = response.data;
       });
 
-    this.platform.log.debug('Set Characteristic Brightness -> ', value);
+    this.platform.log.debug('Get Characteristic Brightness -> ', value);
     return value;
   }
 
@@ -196,7 +195,7 @@ export class ExamplePlatformAccessory {
   async getHue(): Promise<CharacteristicValue> {
     //const hue = this.exampleStates.Hue;
     let hue;
-    axios.default.get('/GetHue')
+    axios.default.get('GetHue')
       .then((response) => {
         hue = response.data;
       });
@@ -209,7 +208,7 @@ export class ExamplePlatformAccessory {
   // Handle SET Hue value from homekit
   async setHue(value: CharacteristicValue) {
     //this.exampleStates.Hue = value as number;
-    axios.default.post('/SetHue', {value});
+    axios.default.post('SetHue', {value});
 
     this.platform.log.debug('Set Characteristic Hue ->', value);
   }
@@ -218,11 +217,10 @@ export class ExamplePlatformAccessory {
   async getSaturation(): Promise<CharacteristicValue> {
     //const hue = this.exampleStates.Hue;
     let sat;
-    axios.default.get('/GetSat')
+    axios.default.get('GetSat')
       .then((response) => {
         sat = response.data;
       });
-
     this.platform.log.debug('Get Characteristic Saturation ->', sat);
 
     return sat;
@@ -231,7 +229,7 @@ export class ExamplePlatformAccessory {
   // Handle SET Saturation value from homekit
   async setSaturation(value: CharacteristicValue) {
     //this.exampleStates.Brightness = value as number;
-    axios.default.post('/SetSat', {value});
+    axios.default.post('SetSat', {value});
     this.platform.log.debug('Set Characteristic Saturation ->', value);
   }
 }
