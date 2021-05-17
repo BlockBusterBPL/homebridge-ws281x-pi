@@ -4,6 +4,8 @@ import { ExampleHomebridgePlatform } from './platform';
 
 import axios = require('axios');
 
+import { request, RequestOptions } from 'http';
+
 
 
 /**
@@ -130,7 +132,24 @@ export class ExamplePlatformAccessory {
     // implement your own code to turn your device on/off
     //this.exampleStates.On = value as boolean;
 
-    axios.default.post('SetOn', value as string);
+    const req = request(
+      {
+        host: 'localhost',
+        //port: '5000',
+        path: '/SetOn',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      response => {
+        this.platform.log.debug(response.statusCode.toString()); // 200
+      },
+    );
+
+    req.write(value);
+
+    req.end();
 
     this.platform.log.debug('Set Characteristic On ->', value);
   }
@@ -152,20 +171,55 @@ export class ExamplePlatformAccessory {
     // implement your own code to check if the device is on
     //var isOn = this.exampleStates.On;
     let isOn: boolean;
-    let isOnString: string;
     isOn = false;
-    axios.default.get('GetOn').then(
-      (response) => {
-        isOnString = response.data;
-        isOn = (isOnString === 'true');
+    this.performRequest(
+      {
+        host: 'localhost',
+        path: '/GetOn',
+        method: 'GET',
       },
-    );
+    )
+      .then(response => {
+        if (response === true) {
+          isOn = true;
+        }
+      })
+      .catch(error => {
+        this.platform.log.error(error);
+      });
+
+
     this.platform.log.debug('Get Characteristic On ->', isOn);
 
     // if you need to return an error to show the device as "Not Responding" in the Home app:
     // throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
 
     return isOn;
+  }
+
+  async performRequest(options: RequestOptions) {
+    return new Promise((resolve, reject) => {
+      request(
+        options,
+        (response) => {
+          const { statusCode } = response;
+          if (statusCode >= 300) {
+            reject(
+              new Error(response.statusMessage),
+            );
+          }
+          const chunks = [];
+          response.on('data', (chunk) => {
+            chunks.push(chunk);
+          });
+          response.on('end', () => {
+            const result = Buffer.concat(chunks).toString();
+            resolve(JSON.parse(result));
+          });
+        },
+      )
+        .end();
+    });
   }
 
   /**
@@ -175,16 +229,42 @@ export class ExamplePlatformAccessory {
   async setBrightness(value: CharacteristicValue) {
     // implement your own code to set the brightness
     //this.exampleStates.Brightness = value as number;
-    axios.default.post('SetVal', {value});
+    const req = request(
+      {
+        host: 'localhost',
+        //port: '5000',
+        path: '/SetVal',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      response => {
+        this.platform.log.debug(response.statusCode.toString()); // 200
+      },
+    );
+
+    req.write(value);
+
+    req.end();
 
     this.platform.log.debug('Set Characteristic Brightness -> ', value);
   }
 
   async getBrightness(): Promise<CharacteristicValue> {
     let value;
-    axios.default.get('GetVal')
-      .then((response) => {
-        value = response.data;
+    this.performRequest(
+      {
+        host: 'localhost',
+        path: '/GetVal',
+        method: 'GET',
+      },
+    )
+      .then(response => {
+        value = response;
+      })
+      .catch(error => {
+        this.platform.log.error(error);
       });
 
     this.platform.log.debug('Get Characteristic Brightness -> ', value);
@@ -195,9 +275,18 @@ export class ExamplePlatformAccessory {
   async getHue(): Promise<CharacteristicValue> {
     //const hue = this.exampleStates.Hue;
     let hue;
-    axios.default.get('GetHue')
-      .then((response) => {
-        hue = response.data;
+    this.performRequest(
+      {
+        host: 'localhost',
+        path: '/GetHue',
+        method: 'GET',
+      },
+    )
+      .then(response => {
+        hue = response;
+      })
+      .catch(error => {
+        this.platform.log.error(error);
       });
 
     this.platform.log.debug('Get Characteristic Hue ->', hue);
@@ -208,7 +297,24 @@ export class ExamplePlatformAccessory {
   // Handle SET Hue value from homekit
   async setHue(value: CharacteristicValue) {
     //this.exampleStates.Hue = value as number;
-    axios.default.post('SetHue', {value});
+    const req = request(
+      {
+        host: 'localhost',
+        //port: '5000',
+        path: '/SetHue',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      response => {
+        this.platform.log.debug(response.statusCode.toString()); // 200
+      },
+    );
+
+    req.write(value);
+
+    req.end();
 
     this.platform.log.debug('Set Characteristic Hue ->', value);
   }
@@ -217,9 +323,18 @@ export class ExamplePlatformAccessory {
   async getSaturation(): Promise<CharacteristicValue> {
     //const hue = this.exampleStates.Hue;
     let sat;
-    axios.default.get('GetSat')
-      .then((response) => {
-        sat = response.data;
+    this.performRequest(
+      {
+        host: 'localhost',
+        path: '/GetSat',
+        method: 'GET',
+      },
+    )
+      .then(response => {
+        sat = response;
+      })
+      .catch(error => {
+        this.platform.log.error(error);
       });
     this.platform.log.debug('Get Characteristic Saturation ->', sat);
 
@@ -229,7 +344,25 @@ export class ExamplePlatformAccessory {
   // Handle SET Saturation value from homekit
   async setSaturation(value: CharacteristicValue) {
     //this.exampleStates.Brightness = value as number;
-    axios.default.post('SetSat', {value});
+    const req = request(
+      {
+        host: 'localhost',
+        //port: '5000',
+        path: '/SetSat',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      response => {
+        this.platform.log.debug(response.statusCode.toString()); // 200
+      },
+    );
+
+    req.write(value);
+
+    req.end();
+
     this.platform.log.debug('Set Characteristic Saturation ->', value);
   }
 }
