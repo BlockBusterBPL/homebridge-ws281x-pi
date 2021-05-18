@@ -261,7 +261,7 @@ export class ExamplePlatformAccessory {
       },
     )
       .then(response => {
-        value = response;
+        value = response as number;
       })
       .catch(error => {
         this.platform.log.error(error);
@@ -283,7 +283,7 @@ export class ExamplePlatformAccessory {
       },
     )
       .then(response => {
-        hue = response;
+        hue = response as number;
       })
       .catch(error => {
         this.platform.log.error(error);
@@ -331,7 +331,7 @@ export class ExamplePlatformAccessory {
       },
     )
       .then(response => {
-        sat = response;
+        sat = response as number;
       })
       .catch(error => {
         this.platform.log.error(error);
