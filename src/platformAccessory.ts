@@ -252,7 +252,7 @@ export class ExamplePlatformAccessory {
   }
 
   async getBrightness(): Promise<CharacteristicValue> {
-    let value;
+    let value: number;
     this.performRequest(
       {
         host: 'localhost',
@@ -268,13 +268,13 @@ export class ExamplePlatformAccessory {
       });
 
     this.platform.log.debug('Get Characteristic Brightness -> ', value);
-    return value;
+    return value as number;
   }
 
   // Handle GET Hue value from homekit
   async getHue(): Promise<CharacteristicValue> {
     //const hue = this.exampleStates.Hue;
-    let hue;
+    let hue: number;
     this.performRequest(
       {
         host: 'localhost',
@@ -291,7 +291,7 @@ export class ExamplePlatformAccessory {
 
     this.platform.log.debug('Get Characteristic Hue ->', hue);
 
-    return hue;
+    return hue as number;
   }
 
   // Handle SET Hue value from homekit
@@ -322,7 +322,7 @@ export class ExamplePlatformAccessory {
   // Handle GET Saturation value from homekit
   async getSaturation(): Promise<CharacteristicValue> {
     //const hue = this.exampleStates.Hue;
-    let sat;
+    let sat: number;
     this.performRequest(
       {
         host: 'localhost',
@@ -338,7 +338,7 @@ export class ExamplePlatformAccessory {
       });
     this.platform.log.debug('Get Characteristic Saturation ->', sat);
 
-    return sat;
+    return sat as number;
   }
 
   // Handle SET Saturation value from homekit
