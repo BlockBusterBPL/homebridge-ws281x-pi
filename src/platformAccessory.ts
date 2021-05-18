@@ -268,6 +268,9 @@ export class ExamplePlatformAccessory {
       });
 
     this.platform.log.debug('Get Characteristic Brightness -> ', value);
+    if (typeof value === undefined) {
+      value = 0;
+    }
     return value as number;
   }
 
@@ -290,7 +293,9 @@ export class ExamplePlatformAccessory {
       });
 
     this.platform.log.debug('Get Characteristic Hue ->', hue);
-
+    if (typeof hue === undefined) {
+      hue = 0;
+    }
     return hue as number;
   }
 
@@ -337,7 +342,9 @@ export class ExamplePlatformAccessory {
         this.platform.log.error(error);
       });
     this.platform.log.debug('Get Characteristic Saturation ->', sat);
-
+    if (typeof sat === undefined) {
+      sat = 0;
+    }
     return sat as number;
   }
 
